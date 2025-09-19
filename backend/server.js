@@ -3,12 +3,14 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const authRoutes = require("./routes/auth");
 const testRoutes = require("./routes/test");
+const contactRoutes = require("./routes/contactRoute");
 require("dotenv").config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use("/auth", authRoutes);
+app.use("/contacts", contactRoutes);
 app.use("/", testRoutes);
 
 app.get("/", (req, res) => res.json({ message: "API MyContacts" }));
