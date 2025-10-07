@@ -6,12 +6,14 @@ function Auth({ onLogin }) {
   const [password, setPassword] = useState("");
   const [message, setMessage] = useState("");
 
+  const API_URL = "https://mycontactsv2.onrender.com";
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
 
     try {
-      const url = isSignup ? "/auth/register" : "/auth/login";
+      const url = isSignup ? `${API_URL}/auth/register` : `${API_URL}/auth/login`;
 
       const res = await fetch(url, {
         method: "POST",

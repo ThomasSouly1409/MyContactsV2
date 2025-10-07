@@ -7,7 +7,7 @@ function Contacts({ onLogout }) {
   const [newContact, setNewContact] = useState({ firstName: "", lastName: "", phone: "" });
   const token = localStorage.getItem("token");
 
-  const API_URL = process.env.REACT_APP_API_URL || "https://mycontactsv2.onrender.com";
+  const API_URL = "https://mycontactsv2.onrender.com";
 
   const loadContacts = async () => {
     try {
@@ -104,7 +104,6 @@ function Contacts({ onLogout }) {
         Déconnexion
       </button>
 
-      {/* Formulaire d’ajout */}
       <form onSubmit={handleAddContact} style={{ marginBottom: "30px" }}>
         <input
           type="text"
@@ -130,7 +129,6 @@ function Contacts({ onLogout }) {
         <button type="submit">Ajouter</button>
       </form>
 
-      {/* Liste des contacts */}
       {contacts.length === 0 && <p>Aucun contact trouvé.</p>}
 
       {Array.isArray(contacts) &&
