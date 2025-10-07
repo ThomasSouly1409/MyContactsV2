@@ -7,9 +7,11 @@ function Contacts({ onLogout }) {
   const [newContact, setNewContact] = useState({ firstName: "", lastName: "", phone: "" });
   const token = localStorage.getItem("token");
 
+  const API_URL = process.env.REACT_APP_API_URL || "https://mycontactsv2.onrender.com";
+
   const loadContacts = async () => {
     try {
-      const res = await fetch("/contacts", {
+      const res = await fetch(`${API_URL}/contacts`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       const data = await res.json();
@@ -21,10 +23,11 @@ function Contacts({ onLogout }) {
 
   useEffect(() => {
     loadContacts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleDelete = async (id) => {
-    await fetch(`/contacts/${id}`, {
+    await fetch(`${API_URL}/contacts/${id}`, {
       method: "DELETE",
       headers: { Authorization: `Bearer ${token}` },
     });
@@ -42,7 +45,7 @@ function Contacts({ onLogout }) {
 
   const handleSave = async (id) => {
     try {
-      const res = await fetch(`/contacts/${id}`, {
+      const res = await fetch(`${API_URL}/contacts/${id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -72,7 +75,7 @@ function Contacts({ onLogout }) {
     }
 
     try {
-      const res = await fetch("/contacts", {
+      const res = await fetch(`${API_URL}/contacts`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,13 +98,13 @@ function Contacts({ onLogout }) {
 
   return (
     <div style={{ textAlign: "center", marginTop: "40px" }}>
-      <h2> Mes Contacts</h2>
+      <h2>Mes Contacts</h2>
 
       <button onClick={onLogout} style={{ marginBottom: "20px" }}>
-         Déconnexion
+        Déconnexion
       </button>
 
-      {/* ➕ Formulaire d’ajout */}
+      {/* Formulaire d’ajout */}
       <form onSubmit={handleAddContact} style={{ marginBottom: "30px" }}>
         <input
           type="text"
@@ -124,52 +127,56 @@ function Contacts({ onLogout }) {
           onChange={(e) => setNewContact({ ...newContact, phone: e.target.value })}
           required
         />
-        <button type="submit"> Ajouter</button>
+        <button type="submit">Ajouter</button>
       </form>
 
-      {/* 📋 Liste des contacts */}
+      {/* Liste des contacts */}
       {contacts.length === 0 && <p>Aucun contact trouvé.</p>}
 
-      {Array.isArray(contacts) && contacts.map((c) => (
-        <div
-          key={c._id}
-          style={{
-            border: "1px solid #ccc",
-            borderRadius: "10px",
-            padding: "10px",
-            margin: "10px auto",
-            width: "300px",
-          }}
-        >
-          {editingContact === c._id ? (
-            <>
-              <input
-                value={form.firstName}
-                onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-              />
-              <input
-                value={form.lastName}
-                onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-              />
-              <input
-                value={form.phone}
-                onChange={(e) => setForm({ ...form, phone: e.target.value })}
-              />
-              <button onClick={() => handleSave(c._id)}> Sauvegarder</button>
-              <button onClick={() => setEditingContact(null)}> Annuler</button>
-            </>
-          ) : (
-            <>
-              <p>
-                <strong>{c.firstName} {c.lastName}</strong><br />
-                 {c.phone}
-              </p>
-              <button onClick={() => handleEdit(c)}> Modifier</button>
-              <button onClick={() => handleDelete(c._id)}> Supprimer</button>
-            </>
-          )}
-        </div>
-      ))}
+      {Array.isArray(contacts) &&
+        contacts.map((c) => (
+          <div
+            key={c._id}
+            style={{
+              border: "1px solid #ccc",
+              borderRadius: "10px",
+              padding: "10px",
+              margin: "10px auto",
+              width: "300px",
+            }}
+          >
+            {editingContact === c._id ? (
+              <>
+                <input
+                  value={form.firstName}
+                  onChange={(e) => setForm({ ...form, firstName: e.target.value })}
+                />
+                <input
+                  value={form.lastName}
+                  onChange={(e) => setForm({ ...form, lastName: e.target.value })}
+                />
+                <input
+                  value={form.phone}
+                  onChange={(e) => setForm({ ...form, phone: e.target.value })}
+                />
+                <button onClick={() => handleSave(c._id)}>Sauvegarder</button>
+                <button onClick={() => setEditingContact(null)}>Annuler</button>
+              </>
+            ) : (
+              <>
+                <p>
+                  <strong>
+                    {c.firstName} {c.lastName}
+                  </strong>
+                  <br />
+                  {c.phone}
+                </p>
+                <button onClick={() => handleEdit(c)}>Modifier</button>
+                <button onClick={() => handleDelete(c._id)}>Supprimer</button>
+              </>
+            )}
+          </div>
+        ))}
     </div>
   );
 }
